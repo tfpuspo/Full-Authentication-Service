@@ -1,6 +1,6 @@
 # Authentication Service
 
-A secure and reusable **Authentication & Authorization Service** built with **Spring Boot**, **Spring Security**, **JWT**, and **PostgreSQL**. The service provides a complete authentication workflow, including email/password authentication, Google OAuth 2.0, email verification, password recovery, refresh token rotation, and session management.
+A secure and reusable **Authentication Service** built with **Spring Boot**, **Spring Security**, **JWT**, and **PostgreSQL**. The service provides a complete authentication workflow, including email/password authentication, Google OAuth 2.0, email verification, password recovery, refresh token rotation, and session management.
 
 Designed to be integrated into **microservice-based** and **enterprise** applications.
 
