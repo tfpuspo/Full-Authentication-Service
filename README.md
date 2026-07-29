@@ -59,6 +59,7 @@ This project demonstrates industry-standard authentication practices using Sprin
 
 ## Technology Stack
 
+Backend
 | Category | Technology |
 |----------|------------|
 | Language | Java|
@@ -68,6 +69,14 @@ This project demonstrates industry-standard authentication practices using Sprin
 | OAuth | Google OAuth 2.0 |
 | Database | PostgreSQL |
 | Email | Spring Mail |
+
+
+Frontend
+| Category | Technology |
+|----------|------------|
+| Language | TypeScript |
+| Library |	React |
+| Styling	| Tailwind CSS |
 
 
 ## API Overview
