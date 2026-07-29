@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Authentication ERD — All 10 Tables</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f8fafc; padding: 32px; }
+        h1 { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+        p  { font-size: 14px; color: #64748b; margin-bottom: 28px; }
+
+        .legend {
+          display: flex; flex-wrap: wrap; gap: 16px;
+          margin-bottom: 28px;
+        }
+        .legend-item {
+          display: flex; align-items: center; gap-6px; font-size: 13px; color: #334155;
+          background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+          padding: 6px 14px; gap: 8px;
+        }
+        .legend-dot {
+          width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+        }
+
+        .erd-wrapper {
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 14px;
+          padding: 32px;
+          overflow-x: auto;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .mermaid svg { width: 100% !important; min-width: 900px; height: auto; }
+
+        /* Force table name headers to be visible */
+        .mermaid svg .er.entityLabel,
+        .mermaid svg .entityLabel,
+        .mermaid svg text.entityLabel,
+        .mermaid svg .er text {
+          fill: #1e293b !important;
+          font-size: 13px !important;
+          font-weight: 700 !important;
+          font-family: Arial, sans-serif !important;
+        }
+
+        /* Entity header background */
+        .mermaid svg .er.entityBox {
+          fill: #1e3a8a !important;
+          stroke: #1e3a8a !important;
+        }
+
+        /* Attribute rows */
+        .mermaid svg .er.attributeBoxEven {
+          fill: #eff6ff !important;
+        }
+        .mermaid svg .er.attributeBoxOdd {
+          fill: #f8fafc !important;
+        }
+
+        /* Entity border */
+        .mermaid svg .er.entityBox ~ rect {
+          stroke: #3b82f6 !important;
+        }
+
+        /* Relationship lines */
+        .mermaid svg .er.relationshipLine {
+          stroke: #3b82f6 !important;
+          stroke-width: 1.5px !important;
+        }
+
+        .mermaid svg .er.relationshipLabel {
+          fill: #475569 !important;
+          font-size: 11px !important;
+        }
+
+        footer {
+          margin-top: 24px;
+          font-size: 12px;
+          color: #94a3b8;
+          text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Authentication Database — ERD</h1>
+<p>All 10 tables for a complete JWT-based authentication system.</p>
+
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> CORE tables (always needed)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> EXTRA tables (add when needed)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div> PK = Primary Key</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> FK = Foreign Key</div>
+</div>
+
+<div class="erd-wrapper">
+    <div class="mermaid">
+        erDiagram
+        USERS {
+        uuid id PK
+        string name
+        string email
+        string password_hash
+        boolean is_verified
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+        }
+        SESSIONS {
+        uuid id PK
+        uuid user_id FK
+        string device_name
+        string ip_address
+        string user_agent
+        timestamp last_active_at
+        timestamp created_at
+        }
+        REFRESH_TOKENS {
+        uuid id PK
+        uuid user_id FK
+        string token
+        boolean is_revoked
+        timestamp expires_at
+        timestamp created_at
+        }
+        PASSWORD_RESETS {
+        uuid id PK
+        uuid user_id FK
+        string reset_token
+        boolean is_used
+        timestamp expires_at
+        timestamp created_at
+        }
+        EMAIL_VERIFICATIONS {
+        uuid id PK
+        uuid user_id FK
+        string verify_token
+        boolean is_used
+        timestamp expires_at
+        timestamp created_at
+        }
+        OAUTH_ACCOUNTS {
+        uuid id PK
+        uuid user_id FK
+        string provider
+        string provider_id
+        string access_token
+        timestamp created_at
+        }
+        TWO_FACTOR_AUTH {
+        uuid id PK
+        uuid user_id FK
+        string otp_code
+        boolean is_enabled
+        boolean is_used
+        timestamp expires_at
+        timestamp created_at
+        }
+        AUDIT_LOGS {
+        uuid id PK
+        uuid user_id FK
+        string action
+        string ip_address
+        string status
+        timestamp created_at
+        }
+        FAILED_LOGIN_ATTEMPTS {
+        uuid id PK
+        string email
+        string ip_address
+        int attempt_count
+        timestamp blocked_until
+        timestamp attempted_at
+        }
+        USER_DEVICES {
+        uuid id PK
+        uuid user_id FK
+        string device_name
+        boolean is_trusted
+        string ip_address
+        timestamp last_used_at
+        timestamp created_at
+        }
+
+        USERS ||--o{ SESSIONS : "has"
+        USERS ||--o{ REFRESH_TOKENS : "owns"
+        USERS ||--o{ PASSWORD_RESETS : "requests"
+        USERS ||--o{ EMAIL_VERIFICATIONS : "verifies"
+        USERS ||--o{ OAUTH_ACCOUNTS : "links"
+        USERS ||--o{ TWO_FACTOR_AUTH : "enables"
+        USERS ||--o{ AUDIT_LOGS : "tracked"
+        USERS ||--o{ USER_DEVICES : "owns"
+    </div>
+</div>
+
+<footer>Authentication ERD · 10 Tables · JWT-based Auth System</footer>
+
+<script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontSize: '14px',
+        fontFamily: 'Arial, sans-serif',
+        primaryColor:      '#1e3a8a',
+        primaryTextColor:  '#ffffff',
+        primaryBorderColor:'#1e40af',
+        lineColor:         '#3b82f6',
+        secondaryColor:    '#eff6ff',
+        tertiaryColor:     '#f8fafc',
+        edgeLabelBackground: '#ffffff',
+        attributeBackgroundColorEven: '#eff6ff',
+        attributeBackgroundColorOdd:  '#f8fafc',
+      },
+      er: {
+        diagramPadding: 24,
+        layoutDirection: 'TB',
+        minEntityWidth: 180,
+        minEntityHeight: 50,
+        entityPadding: 16,
+        useMaxWidth: false,
+      }
+    });
+</script>
+</body>
+</html>
